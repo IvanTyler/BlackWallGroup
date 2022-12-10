@@ -1,0 +1,25 @@
+.tickerListItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    width: 80px;
+    cursor: pointer;
+
+    &:first-child {
+        border-radius: 12px 0 0 0;
+    }
+}
+
+.tickerListItemActive {
+    background-color: #d9dce0;
+    color: #4cb1ff;
+
+    .tickerItemLink {
+        color: #2291cd;
+    }
+}
+
+.tickerItemLink {
+    color: #4cb1ff;
+}
