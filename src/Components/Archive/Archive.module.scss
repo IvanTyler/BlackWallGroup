@@ -1,0 +1,58 @@
+.sectionArchive {
+    border: solid 1px #e4e4e4;
+    border-radius: 0 0 12px 12px;
+
+    &__aplicationsItem {
+        display: flex;
+
+        &:nth-child(even) {
+            background-color: lighten(#d9dce0, 8%);
+        }
+    }
+
+    .notAplications {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+    }
+
+    &__text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 1 20%;
+        height: 40px;
+        border-right: solid 1px #dddddd;
+        font-size: 15px;
+        color: #5f6062;
+    }
+
+    .buy {
+        color: green;
+    }
+
+    .sell {
+        color: red;
+    }
+
+    .headerAplicationsTitles {
+        background-color: darken(#d9dce0, 8%);
+
+        &__list {
+            display: flex;
+        }
+
+        &__item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 20%;
+            height: 40px;
+            color: #5f6062;
+            border-right: solid 1px #dddddd;
+        }
+    }
+}

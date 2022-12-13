@@ -4,8 +4,7 @@ import style from './CurrencyPairs.module.scss'
 
 export const CurrencyPairs: React.FC = () => {
 
-    const [openModal, setOpenModal] = useState(false)
-
+    const [side, setSide] = useState('Buy')
     const [buyDefault, setBuyDefault] = useState(1.5766)
     const [sellDefault, setSellDefault] = useState(1.5745)
 
@@ -20,13 +19,9 @@ export const CurrencyPairs: React.FC = () => {
         }, 5000)
     }, [])
 
-    const generatorBuy = () => {
-        return +`1.${Math.floor(Math.random() * (5766 - 5720) + 5720)}`
-    }
+    const generatorBuy = () => +`1.${Math.floor(Math.random() * (5766 - 5720) + 5720)}`
 
-    function generatorSell() {
-        return +(generatorBuy() - generatorBuy() / 100 * 0.1).toFixed(4)
-    }
+    const generatorSell = () => +(generatorBuy() - generatorBuy() / 100 * 0.1).toFixed(4)
 
     function getCurrencys() {
         return Array.from(Array(10)).map((_: any, i: number) => {
@@ -43,8 +38,7 @@ export const CurrencyPairs: React.FC = () => {
 
     const currencys = getCurrencys()
 
-    const [buyId, setBuyId] = useState(currencys[0].id)
-    const [sellId, setSellId] = useState(currencys[0].id)
+    const [idCurrencies, setidCurrencies] = useState(currencys[0].id)
 
     const selectedPairPrice = (id: number, currency: string, currentbuy: number, currentSell: number) => {
         currencyTitle.current!.innerText = currency;
@@ -52,57 +46,72 @@ export const CurrencyPairs: React.FC = () => {
         setBuyDefault(prev => prev = currentbuy)
         setSellDefault(prev => prev = currentSell)
 
-        setBuyId((prev: number) => prev = id)
-        setSellId((prev: number) => prev = id)
+        setidCurrencies((prev: number) => prev = id)
     }
 
-    const buyTitlePrice = 'BUY'
-    const buyPrice = currencys.find((el: any) => el.id === buyId)?.pairCurrencies.buy
-    const buyPairCurrensy = currencys.find((el: any) => el.id === buyId)?.pairCurrencies.pair
+
+    const buyPrice = currencys.find((el: any) => el.id === idCurrencies)?.pairCurrencies.buy
+    const buyPairCurrensy = currencys.find((el: any) => el.id === idCurrencies)?.pairCurrencies.pair
+
+    const openModalMakeOrder: React.MutableRefObject<any> = useRef(null)
+    const setTitlePriceBuy = () => {
+        setSide(prev => prev = 'Buy')
+        openModalMakeOrder.current!.style.display = 'block'
+    }
+
+    const setTitlePriceSell = () => {
+        setSide(prev => prev = 'Sell')
+        openModalMakeOrder.current!.style.display = 'block'
+    }
 
     return (
-        <section className={style.sectionCurrensy}>
-            {openModal && <ModalMakeOrder
-                setOpenModal={setOpenModal}
-                buyTitlePrice={buyTitlePrice}
-                buyPrice={buyPrice}
-                buyPairCurrensy={buyPairCurrensy}
-            />}
-            <div onClick={() => setListCurrencies(prev => !prev)} className={style.sectionCurrensy__selectedCurrency}>
-                <div ref={currencyTitle} className={style.sectionCurrensy__select}>
-                    {currencys[0].pairCurrencies.pair}
-                </div>
-                {listCurrencies && <ul className={style.sectionCurrensy__currencyList}>
-                    {
-                        currencys.length ?
-                            currencys.map((el) => {
-                                return <li
-                                    key={el.id}
-                                    className={style.sectionCurrensy__currencyItem}
-                                    onClick={() => selectedPairPrice(
-                                        el.id,
-                                        el.pairCurrencies.pair,
-                                        el.pairCurrencies.buy,
-                                        el.pairCurrencies.sell
-                                    )}
-                                >
-                                    {el.pairCurrencies.pair}
-                                </li>
-                            }) : null
-                    }
-                </ul>}
+        <>
+            <div ref={openModalMakeOrder} className={style.ModalMakeOrder}>
+                <ModalMakeOrder
+                    idCurrencies={idCurrencies}
+                    openModalMakeOrder={openModalMakeOrder}
+                    side={side}
+                    buyPrice={buyPrice}
+                    buyPairCurrensy={buyPairCurrensy}
+                />
             </div>
+            <section className={style.sectionCurrensy}>
+                <div onClick={() => setListCurrencies(prev => !prev)} className={style.sectionCurrensy__selectedCurrency}>
+                    <div ref={currencyTitle} className={style.sectionCurrensy__select}>
+                        {currencys[0].pairCurrencies.pair}
+                    </div>
+                    {listCurrencies && <ul className={style.sectionCurrensy__currencyList}>
+                        {
+                            currencys.length ?
+                                currencys.map((el) => {
+                                    return <li
+                                        key={el.id}
+                                        className={style.sectionCurrensy__currencyItem}
+                                        onClick={() => selectedPairPrice(
+                                            el.id,
+                                            el.pairCurrencies.pair,
+                                            el.pairCurrencies.buy,
+                                            el.pairCurrencies.sell
+                                        )}
+                                    >
+                                        {el.pairCurrencies.pair}
+                                    </li>
+                                }) : null
+                        }
+                    </ul>}
+                </div>
 
-            <div className={style.sectionCurrensy__priceBuyCell}>
-                <div onClick={() => setOpenModal((prev: boolean) => !prev)} className={style.sectionCurrensy__priceWrapper} data-id={buyId}>
-                    <div className={style.sectionCurrensy__titlePrice}>BUY</div>
-                    <div className={style.sectionCurrensy__currentPrice}>{buyDefault}</div>
+                <div className={style.sectionCurrensy__priceBuyCell}>
+                    <div onClick={() => setTitlePriceBuy()} className={style.sectionCurrensy__priceWrapper}>
+                        <div className={style.sectionCurrensy__titlePrice}>BUY</div>
+                        <div className={style.sectionCurrensy__currentPrice}>{buyDefault}</div>
+                    </div>
+                    <div onClick={() => setTitlePriceSell()} className={style.sectionCurrensy__priceWrapper}>
+                        <div className={style.sectionCurrensy__titlePrice}>SELL</div>
+                        <div className={style.sectionCurrensy__currentPrice}>{sellDefault}</div>
+                    </div>
                 </div>
-                <div className={style.sectionCurrensy__priceWrapper} data-id={sellId}>
-                    <div className={style.sectionCurrensy__titlePrice}>SELL</div>
-                    <div className={style.sectionCurrensy__currentPrice}>{sellDefault}</div>
-                </div>
-            </div>
-        </section>
+            </section>
+        </>
     )
 }

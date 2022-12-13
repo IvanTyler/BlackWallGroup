@@ -1,42 +1,33 @@
-import React, { useState } from "react";
-import { ITickerNavigation } from "../../Interfaces/TickerNavigation";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Container } from "../Container/Container";
-import { List } from "../List/List";
-import { TickerNavigationItem } from "../TickerItem/TickerNavigationItem";
 import style from './TickerNavigation.module.scss'
 
 export const TickerNavigation: React.FC = () => {
 
-    const list: ITickerNavigation[] = [
-        {
-            id: Math.floor(Math.random() * (999999999 - 100000000) + 100000000),
-            name: 'Trading',
-            link: '/',
-            active: true,
-        },
-        {
-            id: Math.floor(Math.random() * (999999999 - 100000000) + 100000000),
-            name: 'Archive',
-            link: 'Archive',
-            active: false,
-        }
-    ]
-
-    const [tickerList, setTickerList] = useState<ITickerNavigation[]>(list)
+    const location = useLocation();
+    useEffect(() => { }, [location]);
 
     return (
         <section className={style.sectionTickerNavigation}>
             <Container styleComponent={style.sectionTickerNavigation__navigation}>
                 <ul className={style.sectionTickerNavigation__list}>
-                    <List
-                        items={tickerList}
-                        renderItem={(item: ITickerNavigation) =>
-                            <TickerNavigationItem
-                                item={item}
-                                setTickerList={setTickerList}
-                                key={item.id}
-                            />}
-                    />
+                    <li
+                        className={
+                            window.location.href === 'http://localhost:3000/' ?
+                                style.tickerListItem + ' ' + style.tickerListItemActive : style.tickerListItem
+                        }
+                    >
+                        <Link to={'/'} className={style.tickerItemLink}>Trading</Link>
+                    </li>
+                    <li
+                        className={
+                            window.location.href === 'http://localhost:3000/Archive' ?
+                                style.tickerListItem + ' ' + style.tickerListItemActive : style.tickerListItem
+                        }
+                    >
+                        <Link to={'Archive'} className={style.tickerItemLink}>Archive</Link>
+                    </li>
                 </ul>
             </Container>
         </section>
