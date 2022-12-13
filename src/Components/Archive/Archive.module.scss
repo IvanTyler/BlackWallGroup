@@ -1,6 +1,11 @@
 .sectionArchive {
     border: solid 1px #e4e4e4;
     border-radius: 0 0 12px 12px;
+    overflow-x: auto;
+
+    &__content {
+        min-width: 700px;
+    }
 
     &__aplicationsItem {
         display: flex;

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import style from './DateTicker.module.scss'
+import style from './TimeTicker.module.scss'
 
-export const DateTicker: React.FC = () => {
+export const TimeTicker: React.FC = () => {
 
     const time = useRef<HTMLSpanElement>(null)
 
@@ -15,10 +15,14 @@ export const DateTicker: React.FC = () => {
         const minutes = new Date().getMinutes()
         const seconds = new Date().getSeconds()
 
+        const lengtHours = String(hours).split('').length
         const lengthMinutes = String(minutes).split('').length
         const lengthSecundes = String(seconds).split('').length
 
-        time.current!.innerHTML = `${hours}:${lengthMinutes > 1 ? minutes : `0${minutes}`}:${lengthSecundes > 1 ? seconds : `0${seconds}`}`
+        if (time.current !== null) time.current!.innerHTML = `
+            ${lengtHours > 1 ? hours : `0${hours}`} :
+            ${lengthMinutes > 1 ? minutes : `0${minutes}`} :
+            ${lengthSecundes > 1 ? seconds : `0${seconds}`}`
     }
 
     return (

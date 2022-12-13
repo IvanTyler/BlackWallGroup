@@ -53,6 +53,16 @@
         border: solid 1px #ececec;
     }
 
+    &__errorVolume {
+        border: solid 2px red;
+    }
+
+    &__input::-webkit-outer-spin-button,
+    &__input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
     &__interactionButton {
         display: flex;
         justify-content: flex-end;
@@ -68,7 +78,7 @@
         text-transform: uppercase;
         cursor: pointer;
     }
-    
+
     &__submit {
         margin-left: 11px;
         background-color: #fd6e74;

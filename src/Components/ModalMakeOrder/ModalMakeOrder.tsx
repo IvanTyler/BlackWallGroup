@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { IAplication } from "../../Interfaces/IApplication";
+import { IpairCurrencies } from "../../Interfaces/ICurrencys";
 import style from './ModalMakeOrder.module.scss'
 
 interface ModalProps {
-    idCurrencies: number;
     openModalMakeOrder: any;
     side: string;
     buyPrice: any;
@@ -10,7 +11,6 @@ interface ModalProps {
 }
 
 export const ModalMakeOrder: React.FC<ModalProps> = ({
-    idCurrencies,
     openModalMakeOrder,
     side,
     buyPrice,
@@ -18,20 +18,20 @@ export const ModalMakeOrder: React.FC<ModalProps> = ({
 }) => {
 
     const [volume, setVolume] = useState('')
-    const [archive, setArchive] = useState<any>([])
+    const [errorVolume, setErrorVolume] = useState(false)
+    const [archive, setArchive] = useState<IpairCurrencies[]>([])
 
     const getApplications = sessionStorage.getItem('applications')
 
     useEffect(() => {
         if (getApplications !== null) {
             const getApplicationsSessionStorageParse = JSON.parse(getApplications)
-            console.log(archive);
             setArchive((prev: any) => [...getApplicationsSessionStorageParse])
         }
     }, [])
 
     const onPushApplication = () => {
-        
+
         const year = new Date().getFullYear()
         const mounth = new Date().getMonth()
         const day = new Date().getDay()
@@ -46,29 +46,35 @@ export const ModalMakeOrder: React.FC<ModalProps> = ({
         const lengthMounth = String(mounth).split('').length
         const lengthDay = String(day).split('').length
 
-        const newApplication = {
+        const newApplication: IAplication = {
             id: Math.floor(Math.random() * (9999999 - 1000000) + 1000000),
             side,
             price: buyPrice,
             instrument: buyPairCurrensy,
-            volume,
+            volume: +volume,
             timestamp: {
                 date: `${year}:${lengthMounth > 1 ? mounth : `0${mounth}`}:${lengthDay > 1 ? day : `0${day}`}`,
                 time: `${hours}:${lengthMinutes > 1 ? minutes : `0${minutes}`}:${lengthSecundes > 1 ? seconds : `0${seconds}`}`,
             }
         }
         const addPlication = [...archive, newApplication]
-        
-        if (volume.trim().length > 1) {
+
+        if (volume.trim().length >= 1) {
             setArchive((prev: any) => [newApplication, ...prev])
             sessionStorage.setItem('applications', JSON.stringify(addPlication))
+            setCloseModal()
+            setErrorVolume(prev => prev = false)
+        } else {
+            setErrorVolume(prev => prev = true)
         }
     }
-    
+
     const inputChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setErrorVolume(prev => prev = false)
+        if (event.target.value.length > 8) event.target.value = event.target.value.slice(0, 8);
         setVolume(event.target.value)
     }
-    
+
     const submitHandlet = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         onPushApplication()
@@ -91,12 +97,15 @@ export const ModalMakeOrder: React.FC<ModalProps> = ({
                 <div className={style.modalMakeOrder__volume}>
                     <span className={style.modalMakeOrder__volumeText}>Volume</span>
                     <input
-                        className={style.modalMakeOrder__input}
+                        className={
+                            errorVolume ?
+                                style.modalMakeOrder__input + ' ' + style.modalMakeOrder__errorVolume :
+                                style.modalMakeOrder__input
+                        }
                         type="number"
                         placeholder=""
                         onChange={inputChangeVolume}
                         value={volume}
-                        max={20000000}
                     />
                 </div>
                 <div className={style.modalMakeOrder__interactionButton}>

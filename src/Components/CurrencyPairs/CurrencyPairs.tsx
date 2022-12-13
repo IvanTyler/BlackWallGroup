@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { ICurrencys } from "../../Interfaces/ICurrencys";
 import { ModalMakeOrder } from "../ModalMakeOrder/ModalMakeOrder";
 import style from './CurrencyPairs.module.scss'
 
@@ -23,7 +24,7 @@ export const CurrencyPairs: React.FC = () => {
 
     const generatorSell = () => +(generatorBuy() - generatorBuy() / 100 * 0.1).toFixed(4)
 
-    function getCurrencys() {
+    function getCurrencys(): ICurrencys[] {
         return Array.from(Array(10)).map((_: any, i: number) => {
             return {
                 id: 1 + i,
@@ -36,7 +37,7 @@ export const CurrencyPairs: React.FC = () => {
         })
     }
 
-    const currencys = getCurrencys()
+    const currencys: ICurrencys[] = getCurrencys()
 
     const [idCurrencies, setidCurrencies] = useState(currencys[0].id)
 
@@ -48,7 +49,6 @@ export const CurrencyPairs: React.FC = () => {
 
         setidCurrencies((prev: number) => prev = id)
     }
-
 
     const buyPrice = currencys.find((el: any) => el.id === idCurrencies)?.pairCurrencies.buy
     const buyPairCurrensy = currencys.find((el: any) => el.id === idCurrencies)?.pairCurrencies.pair
@@ -68,7 +68,6 @@ export const CurrencyPairs: React.FC = () => {
         <>
             <div ref={openModalMakeOrder} className={style.ModalMakeOrder}>
                 <ModalMakeOrder
-                    idCurrencies={idCurrencies}
                     openModalMakeOrder={openModalMakeOrder}
                     side={side}
                     buyPrice={buyPrice}

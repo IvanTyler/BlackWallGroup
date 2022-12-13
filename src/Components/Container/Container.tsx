@@ -6,7 +6,6 @@ interface IContainerProps {
     styleComponent?: string
 }
 
-
 export const Container: React.FC<IContainerProps> = ({ children, styleComponent }) => {
     return (
         <div className={style.container + ' ' + styleComponent}>
